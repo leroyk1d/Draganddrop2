@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Drag & Drop блоків</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      height: 100vh;
+      background-color: #f0f0f0;
+    }
+    .draggable {
+      width: 100px;
+      height: 100px;
+      position: absolute;
+      cursor: grab;
+      border-radius: 8px;
+      user-select: none;
+    }
+    #box1 { background-color: tomato; top: 50px; left: 50px; }
+    #box2 { background-color: steelblue; top: 200px; left: 200px; }
+    #box3 { background-color: mediumseagreen; top: 350px; left: 100px; }
+  </style>
+</head>
+<body>
+
+  <div id="box1" class="draggable"></div>
+  <div id="box2" class="draggable"></div>
+  <div id="box3" class="draggable"></div>
+
+  <script>
+    const draggables = document.querySelectorAll('.draggable');
+
+    draggables.forEach(el => {
+      let isDragging = false;
+      let offsetX, offsetY;
+
+      el.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        el.style.cursor = 'grabbing';
+        offsetX = e.clientX - el.offsetLeft;
+        offsetY = e.clientY - el.offsetTop;
+
+        const moveHandler = (e) => {
+          if (!isDragging) return;
+          el.style.left = (e.clientX - offsetX) + 'px';
+          el.style.top = (e.clientY - offsetY) + 'px';
+        };
+
+        const upHandler = () => {
+          isDragging = false;
+          el.style.cursor = 'grab';
+          document.removeEventListener('mousemove', moveHandler);
+          document.removeEventListener('mouseup', upHandler);
+        };
+
+        document.addEventListener('mousemove', moveHandler);
+        document.addEventListener('mouseup', upHandler);
+      });
+    });
+  </script>
+
+</body>
+</html>
